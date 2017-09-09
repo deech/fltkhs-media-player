@@ -29,7 +29,10 @@ Library
        Extra-Libraries: vlc
        cc-options: -U__BLOCKS__ -D_Nonnull=
     else 
-       Pkgconfig-Depends: libvlc >= 0.29.0
+       if os(windows)
+         Extra-Libraries: vlc
+       else
+         Pkgconfig-Depends: libvlc >= 0.29.0
     Default-Language: Haskell2010
     Build-Depends: base == 4.*,
                    fltkhs >= 0.5.4.0,

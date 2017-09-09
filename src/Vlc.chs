@@ -69,11 +69,10 @@ makeVlcInstance :: IO VlcInstance
 makeVlcInstance =
   let args =
         [
-          "--mouse-hide-timeout=5",
           "--swscale-mode=1",
+          "--mouse-hide-timeout=5",
           "--no-video-title-show",
-          "--no-osd",
-          "--vout=vdpau"
+          "--no-osd"
         ]
   in
     do
