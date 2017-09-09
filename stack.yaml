@@ -1,0 +1,11 @@
+flags: {}
+resolver: lts-8.13
+packages:
+- '.'
+- location:
+    git: https://github.com/deech/fltkhs
+    commit: 4304f2477deb75af0683e2a46d0361ad3d20e424
+  extra-dep: true
+extra-deps:
+- text-1.2.2.0
+- hsexif-0.6.1.2

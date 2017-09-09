@@ -1,0 +1,4 @@
+dist/*
+*.cxx
+*.h
+src/*.txt
