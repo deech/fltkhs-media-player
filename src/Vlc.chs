@@ -34,11 +34,12 @@ data EventManager = EventManager (Ptr ())
 data VlcInstance = VlcInstance (Ptr ())
 data MediaPlayer = MediaPlayer (Ptr ())
 data Media = Media (Ptr ())
+type VlcTime = {#type libvlc_time_t #} 
 
 data Event =
     Ended
-  | TimeChanged CLong
-  | LengthChanged CLong
+  | TimeChanged VlcTime
+  | LengthChanged VlcTime
   | Error
   deriving Show
 
@@ -71,7 +72,8 @@ makeVlcInstance =
           "--mouse-hide-timeout=5",
           "--swscale-mode=1",
           "--no-video-title-show",
-          "--no-osd"
+          "--no-osd",
+          "--vout=vdpau"
         ]
   in
     do
@@ -164,15 +166,15 @@ releaseVlcInstance :: VlcInstance -> IO ()
 releaseVlcInstance (VlcInstance i) =
   {#call libvlc_release #} i
 
-setPosition :: MediaPlayer -> CLong -> IO ()
+setPosition :: MediaPlayer -> VlcTime -> IO ()
 setPosition (MediaPlayer mp) pos =
   {#call libvlc_media_player_set_time #} mp pos
 
-getPosition :: MediaPlayer -> IO CLong
+getPosition :: MediaPlayer -> IO VlcTime
 getPosition (MediaPlayer mp) =
   {#call libvlc_media_player_get_time #} mp
 
-getLength :: MediaPlayer -> IO CLong
+getLength :: MediaPlayer -> IO VlcTime
 getLength (MediaPlayer mp) =
   {#call libvlc_media_player_get_length #} mp
 

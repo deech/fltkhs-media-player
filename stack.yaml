@@ -1,5 +1,5 @@
 flags: {}
-resolver: lts-8.13
+resolver: lts-9.3
 packages:
 - '.'
 - location:
@@ -8,4 +8,3 @@ packages:
   extra-dep: true
 extra-deps:
 - text-1.2.2.0
-- hsexif-0.6.1.2

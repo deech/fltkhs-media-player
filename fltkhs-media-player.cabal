@@ -24,7 +24,12 @@ Flag FastCompile
 Library
     Hs-Source-Dirs: src/
     Exposed-Modules: Vlc
-    Pkgconfig-Depends: libvlc >= 0.29.2
+    if os(darwin)
+       Include-Dirs: ./libvlc-sdk/include
+       Extra-Libraries: vlc
+       cc-options: -U__BLOCKS__ -D_Nonnull=
+    else 
+       Pkgconfig-Depends: libvlc >= 0.29.0
     Default-Language: Haskell2010
     Build-Depends: base == 4.*,
                    fltkhs >= 0.5.4.0,
