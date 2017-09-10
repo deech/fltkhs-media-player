@@ -1,0 +1,49 @@
+* fltkhs-media-player
+  [[https://github.com/deech/fltkhs-media-player/blob/master/media-player-bunny.gif][Big Buck Bunny Sample]]
+
+  ~fltkhs-media-player~ is a simple demo app showing how to use [[https://hackage.haskell.org/package/fltkhs][FLTKHS]] to create a Haskell native gui app that can embed movies using [[https://wiki.videolan.org/LibVLC/][libVLC]]. It is very much a little friendly competition to the [[https://github.com/lettier/movie-monad][movie monad]] project which builds a similar app in [[https://www.gtk.org/][GTK+]] using [[https://gstreamer.freedesktop.org/][GStreamer]]. Below I compare the two projects, the underlying toolkits and the Haskell bindings.
+
+  Currently the app works well on Linux and Windows. On OSX it compiles and pops up the GUI but there is no video output. Even when it works please expect pre-alpha quality, I didn't know anything about VLC before starting this so it may well hiccup or even segfault.
+
+** Linux Installation
+   On Linux first install [[https://www.videolan.org/vlc/][VLC]] from your package manager which should provide the necessary VLC libraries and plugins. Once that's done, clone this repo and:
+
+   #+BEGIN_EXAMPLE
+   > stack build  --flag fltkhs:bundled
+   > stack exec fltkhs-media-player-exe
+   #+END_EXAMPLE
+
+** Windows Installation
+   The Windows install of VLC does not distribute the libraries so the process is a little more involved but I've hidden it away in shell scripts. First install [[http://www.7-zip.org/][7-Zip]] and an [[https://hackage.haskell.org/package/fltkhs-0.5.4.0/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8][MSYS and Stack environment]] , then clone this repo and:
+
+   #+BEGIN_EXAMPLE
+   > sh win64-build.sh
+   > sh win64-run.sh
+   #+END_EXAMPLE
+
+   The shell script will first download a [[http://download.videolan.org/pub/videolan/vlc/2.2.6/win64/][Win64 VLC archive]], unpack it locally and use it provide header files and build/runtime libraries.
+
+** OSX Installation
+   On OSX the app compiles and runs but video doesn't work at all. If you try to open a file it does nothing and spits out an error to the console about not being able to make a video output device. This is a VLC issue and I have no idea how to fix this. But if you want to try it out, install wget:
+   #+BEGIN_EXAMPLE
+   > brew install wget
+   #+END_EXAMPLE
+
+   clone this repo and:
+   #+BEGIN_EXAMPLE
+   > sh osx-build.sh
+   > sh osx-run.sh
+   #+END_EXAMPLE
+
+   The shell script downloads and locally unpacks the latest [[http://download.videolan.org/pub/videolan/vlc/2.2.6/macosx/][OSX dmg]] which contains the necessary libraries and plugins. This way you don't have to install VLC just to try out the app.
+
+** Comparison
+   First off here's how  [[https://github.com/lettier/movie-monad][movie monad]] is better:
+   - It looks nicer. GTK+ just has nicer widgets and themeability. [[https://github.com/deech/fltkhs][FLTKHS]] apps *can* look good, all of the necessary knobs are there, but the user has to make the effort and default look isn't great.
+   - It has a little more functionality, an About window and way to change the resolution of the movie. I didn't bother with an About window because I didn't see a need for it just for comparison, it's pretty easy to add. The second feature I'm sure is quite possible with VLC but I just didn't have time to figure it out, which brings me to ...
+   - GTK+ and thus GTK2HS interops seamlessly with GStreamer. With VLC no good Haskell bindings exist so [[https://github.com/deech/fltkhs-media-player/blob/master/src/Vlc.chs][I had to write my own]] for just the parts I cared about. Writing the bindings was easy but as a complete newbie to VLC figuring out which parts of the API I needed was royal pain. I ended up stealing a lot from the [[https://bitbucket.org/daltomi/flvlc][flvlc]] project but nice bindings a la GTK+/GStreamer would have removed heaps of complexity.
+
+   And here's where I think [[https://hackage.haskell.org/package/fltkhs-0.5.4.0][FLTKHS]] shines:
+   - Ease of installation, hands down. No need for ~gtk2hs-buildtools~, ~gobject~ bindings, ~X11~ on OSX, or even ~GTK+~, the bundled build handles it all for you and gives you a mostly statically linked app with as few runtime dependencies as possible.
+   - Creating custom widgets. Even though FLTKHS doesn't come with a way of hooking up to VLC, I was able to [[https://github.com/deech/fltkhs-media-player/blob/master/src/media-player.hs#L202][override the ~show~ method]] in the underlying toolkit to [[https://github.com/deech/fltkhs-media-player/blob/master/src/media-player.hs#L169][directly in Haskell]] without having to dip into C. With the current GTK bindings I'm not even sure overriding core functionality is possible. [[https://hackage.haskell.org/package/fltkhs-0.5.4.0][FLTKHS]] is just a much more flexible binding.
+   - Like [[https://github.com/lettier/movie-monad][movie monad]] this app also uses a [[https://en.wikipedia.org/wiki/FLUID][GUI builder]] to layout the [[https://github.com/deech/fltkhs-media-player/blob/master/src/MediaPlayer.fl][main screen]]. I think it's better because it doesn't have to [[https://github.com/lettier/movie-monad/blob/master/src/Main.hs#L48,L62][load the Glade file]], use strings to pull out the variables from an XML file and a builder to construct the objects at runtime. Instead the FLUID/Haskell integration straight up [[https://github.com/deech/fltkhs-media-player/blob/master/src/MediaPlayer.fl#L50][produces Haskell code]] inside a [[https://github.com/deech/fltkhs-media-player/blob/master/src/MediaPlayer.fl#L8][standard Haskell function]] at *build* time so in your app you just [[https://github.com/deech/fltkhs-media-player/blob/master/src/MediaPlayer.fl#L50][import the module]] and just [[https://github.com/deech/fltkhs-media-player/blob/master/src/media-player.hs#L176][use it]]. If there's mistakes the compiler catches it. And all this is completely transparent to the user. The only downside is if there are type errors they point to the produced Haskell file which is located somwhere deep in your ~.stack-work~'s directory so that can be confusing .
