@@ -1,5 +1,5 @@
 * fltkhs-media-player
-  [[https://github.com/deech/fltkhs-media-player/blob/master/media-player-bunny.gif][Big Buck Bunny Sample]]
+  [[https://github.com/deech/fltkhs-media-player/blob/master/media-player-bunny.gif]]
 
   ~fltkhs-media-player~ is a simple demo app showing how to use [[https://hackage.haskell.org/package/fltkhs][FLTKHS]] to create a Haskell native gui app that can embed movies using [[https://wiki.videolan.org/LibVLC/][libVLC]]. It is very much a little friendly competition to the [[https://github.com/lettier/movie-monad][movie monad]] project which builds a similar app in [[https://www.gtk.org/][GTK+]] using [[https://gstreamer.freedesktop.org/][GStreamer]]. Below I compare the two projects, the underlying toolkits and the Haskell bindings.
 
