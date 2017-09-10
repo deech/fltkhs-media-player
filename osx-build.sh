@@ -1,9 +1,13 @@
 #!/bin/bash
-if [ ! -d "libvlc-sdk" ]; then
-   git clone https://github.com/RSATom/libvlc-sdk
+if [ ! -d "/Volumes/vlc-2.2.6" ]; then
+   if [ ! -f "vlc-2.2.6.dmg" ]; then 
+      wget http://download.videolan.org/pub/videolan/vlc/2.2.6/macosx/vlc-2.2.6.dmg
+   fi
+   hdiutil attach vlc-2.2.6.dmg
 fi
-if [ ! -d "webchimera.js" ]; then
-   wget https://github.com/RSATom/WebChimera.js/releases/download/v0.2.7/WebChimera.js_v0.2.7_nw_v0.23.7_VLC_v2.2.4_x64_osx.tar.gz
-   tar -zxf WebChimera.js_v0.2.7_nw_v0.23.7_VLC_v2.2.4_x64_osx.tar.gz
+
+stack build --flag fltkhs:bundled --extra-lib-dirs=/Volumes/vlc-2.2.6/VLC.app/Contents/MacOS/lib --extra-include-dirs=/Volumes/vlc-2.2.6/VLC.app/Contents/MacOS/include
+
+if [ -d "/Volumes/vlc-2.2.6" ]; then
+   hdiutil detach /Volumes/vlc-2.2.6
 fi
-stack build --flag fltkhs:bundled --extra-lib-dirs=./webchimera.js/lib --extra-include-dirs=./libvlc-sdk/include
