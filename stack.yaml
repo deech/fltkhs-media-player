@@ -4,7 +4,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/deech/fltkhs
-    commit: 4304f2477deb75af0683e2a46d0361ad3d20e424
+    commit: cdcb7b5938549600b809a52783157ee4a9e81ec0
   extra-dep: true
 extra-deps:
 - text-1.2.2.0

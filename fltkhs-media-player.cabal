@@ -28,7 +28,7 @@ Library
        Include-Dirs: ./libvlc-sdk/include
        Extra-Libraries: vlc
        cc-options: -U__BLOCKS__ -D_Nonnull=
-    else 
+    else
        if os(windows)
          Extra-Libraries: vlc
        else
@@ -59,8 +59,8 @@ Executable fltkhs-media-player-exe
      ghc-Options: -O0
   if os(windows)
    ghc-Options: -optl-mwindows
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
    ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
